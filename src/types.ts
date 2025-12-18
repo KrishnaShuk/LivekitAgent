@@ -1,6 +1,6 @@
-export interface User {
-   Name?: string,
-   Genre?: string,
-   Location?: string,
-   Flag?: boolean,
+export interface SessionUserData {
+  userName?: string;
+  favoriteGenre?: string;
+  storySettingLocation?: string;
+  isInfoComplete?: boolean;
 }
