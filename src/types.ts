@@ -3,4 +3,6 @@ export interface SessionUserData {
   favoriteGenre?: string;
   storySettingLocation?: string;
   isInfoComplete?: boolean;
+  triviaScore?: number;
+  triviaQuestionCount?: number;
 }
