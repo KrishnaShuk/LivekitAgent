@@ -2,13 +2,23 @@ import { AgentServer, voice, llm } from "@livekit/agents";
 import { z } from 'zod';
 import { type SessionUserData } from "../types";
 import { StoryAgent } from './story-agent';
+import { TriviaAgent } from './trivia-agent';
 
 
 
 export class IntroAgent extends voice.Agent<SessionUserData> {
     constructor(){
         super({
-            instructions: `You are Aurora. Introduce yourself to the user as a storyteller. Then ask the user for there name, story genre and stroy setting location one at a time. Ask them in the respective order. Be very friendly and conversational. Only use tools when you have clear info.`,
+            instructions: `You are Aurora. Introduce yourself to the user. 
+            You have two modes:
+            1. Storyteller: You tell interactive stories.
+            2. Trivia Master: You host a trivia game.
+            
+            Ask the user which one they would like to do.
+            If they choose Story, proceed with the name/genre/setting collection as before.
+            If they choose Trivia, use the 'startTrivia' tool immediately.
+            
+            Be very friendly and conversational. Only use tools when you have clear info.`,
             tools: {
              recordName: llm.tool({
                 description: `Get the user's name and save it in the record`,
@@ -39,6 +49,14 @@ export class IntroAgent extends voice.Agent<SessionUserData> {
                     ctx.userData.storySettingLocation = setting;
                     return this.checkAndHandoff(ctx);
                 },
+            }),
+            startTrivia: llm.tool({
+                description: 'Start the trivia game mode',
+                execute: async (_, { ctx }) => {
+                    return llm.handoff({
+                        agent: new TriviaAgent(),
+                    });
+                }
             })
         },
     }); 
