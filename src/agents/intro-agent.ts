@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { type SessionUserData } from "../types";
 import { StoryAgent } from './story-agent';
 import { TriviaAgent } from './trivia-agent';
+import { RPGAgent } from './rpg-agent';
 
 
 
@@ -10,13 +11,15 @@ export class IntroAgent extends voice.Agent<SessionUserData> {
     constructor(){
         super({
             instructions: `You are Aurora. Introduce yourself to the user. 
-            You have two modes:
+            You have three modes:
             1. Storyteller: You tell interactive stories.
             2. Trivia Master: You host a trivia game.
+            3. RPG Adventure: You act as a Dungeon Master for a fantasy game.
             
             Ask the user which one they would like to do.
             If they choose Story, proceed with the name/genre/setting collection as before.
-            If they choose Trivia, use the 'startTrivia' tool immediately.
+            If they choose Trivia, use the 'startTrivia' tool.
+            If they choose RPG, use the 'startRPG' tool.
             
             Be very friendly and conversational. Only use tools when you have clear info.`,
             tools: {
@@ -55,6 +58,22 @@ export class IntroAgent extends voice.Agent<SessionUserData> {
                 execute: async (_, { ctx }) => {
                     return llm.handoff({
                         agent: new TriviaAgent(),
+                    });
+                }
+            }),
+            startRPG: llm.tool({
+                description: 'Start the RPG adventure mode',
+                execute: async (_, { ctx }) => {
+                    ctx.userData.rpgState = {
+                        hp: 100,
+                        maxHp: 100,
+                        xp: 0,
+                        level: 1,
+                        inventory: [],
+                        location: 'Dark Forest Entrance'
+                    };
+                    return llm.handoff({
+                        agent: new RPGAgent(),
                     });
                 }
             })
