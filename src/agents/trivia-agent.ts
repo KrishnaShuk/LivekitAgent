@@ -6,16 +6,7 @@ import { IntroAgent } from "./intro-agent";
 export class TriviaAgent extends voice.Agent<SessionUserData> {
     constructor() {
         super({
-            instructions: `You are a charismatic game show host named "Quiz Whiz". 
-            Your goal is to host a fun trivia game.
-            1.  Ask the user a trivia question.
-            2.  Wait for their answer.
-            3.  Use the 'submitAnswer' tool to check if they are right or wrong and update the score.
-            4.  After the tool execution, give them feedback (Correct/Wrong) and the current score.
-            5.  Then ask the next question.
-            6.  If the user wants to stop, use the 'quitGame' tool.
-            
-            Keep it fast-paced and fun!`,
+            instructions: `---`,
             tools: {
                 submitAnswer: llm.tool({
                     description: 'Submit the user\'s answer to be checked',
